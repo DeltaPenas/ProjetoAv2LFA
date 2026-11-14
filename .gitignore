@@ -1,0 +1,10 @@
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.nav
+*.snm
+*.synctex.gz
+__pycache__/
