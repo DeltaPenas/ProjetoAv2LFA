@@ -1,0 +1,200 @@
+\section{Modelagem Matemática}
+
+Esta seção especifica os AFDs que reconhecem os padrões de placa
+definidos na especificação da linguagem.
+
+\subsection{Notação e alfabeto}
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+Símbolo & Definição \\
+\midrule
+$\Lt$ & as 26 letras maiúsculas, $\{A, B, \dots, Z\}$ \\
+$\Nm$ & os algarismos, $\{0, 1, \dots, 9\}$ \\
+$\Hf$ & o conjunto $\{\texttt{-}\}$, contendo o hífen \\
+$\varepsilon$ & palavra vazia (ausência do hífen na forma antiga) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+O alfabeto comum aos autômatos é $\Sigma = \Lt \cup \Nm \cup \Hf$.
+O hífen pertence ao alfabeto, embora seja rejeitado pelo autômato
+Mercosul. As letras são consideradas apenas em caixa alta; a
+normalização de minúsculas, se desejada, ocorre antes da simulação.
+
+Nas tabelas, $\Lt$, $\Nm$ e $\Hf$ representam qualquer símbolo da
+classe correspondente. Toda transição não indicada leva ao estado
+de rejeição $q_R$, e $\delta(q_R, a) = q_R$ para todo $a \in \Sigma$.
+
+% ------------------------------------------------------------------
+\subsection{AFD 01: padrão anterior ao Mercosul (PNU)}
+
+O padrão anterior tem três letras seguidas de quatro algarismos. Na
+chapa física, o hífen pode aparecer depois das três letras; em
+registros de dados, pode estar ausente. A linguagem é, portanto,
+$\Lt^3\,\Hf?\,\Nm^4$.
+
+\subsubsection{Definição formal}
+
+$M_1 = (Q_1, \Sigma, \delta_1, q_0, F_1)$, em que
+\begin{align*}
+  Q_1 &= \{q_0, q_1, q_2, q_3, q_4, q_5, q_6, q_7, q_8, q_R\},\\
+  F_1 &= \{q_8\}.
+\end{align*}
+
+Os estados $q_1$, $q_2$ e $q_3$ registram as três letras; $q_4$
+registra a leitura do hífen; $q_5$, $q_6$, $q_7$ e $q_8$ registram os
+quatro algarismos; $q_R$ é o estado de rejeição.
+
+\subsubsection{Função de transição}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
+\toprule
+$\delta_1$ & $\Lt$ & $\Nm$ & $\Hf$ \\
+\midrule
+$\to q_0$ & $q_1$ & $q_R$ & $q_R$ \\
+$q_1$     & $q_2$ & $q_R$ & $q_R$ \\
+$q_2$     & $q_3$ & $q_R$ & $q_R$ \\
+$q_3$     & $q_R$ & $q_5$ & $q_4$ \\
+$q_4$     & $q_R$ & $q_5$ & $q_R$ \\
+$q_5$     & $q_R$ & $q_6$ & $q_R$ \\
+$q_6$     & $q_R$ & $q_7$ & $q_R$ \\
+$q_7$     & $q_R$ & $q_8$ & $q_R$ \\
+$* q_8$   & $q_R$ & $q_R$ & $q_R$ \\
+$q_R$     & $q_R$ & $q_R$ & $q_R$ \\
+\bottomrule
+\end{tabular}
+\caption{Função de transição do AFD 01.}
+\label{tab:delta1}
+\end{table}
+
+A partir de $q_3$, a leitura de um algarismo leva diretamente a
+$q_5$, o que permite a forma sem hífen. A leitura de $\Hf$ leva a
+$q_4$, que exige um algarismo em seguida. Assim, o hífen é opcional
+e, quando presente, aparece exatamente após a terceira letra.
+
+\subsubsection{Linguagem reconhecida}
+
+\[
+  \lang{PNU} = \{\, xhy \mid x \in \Lt^3,\; h \in \{\varepsilon, \texttt{-}\},\; y \in \Nm^4 \,\}
+\]
+
+São aceitas \texttt{ABC-1234} e \texttt{ABC1234}. São rejeitadas
+\texttt{AB-12345}, \texttt{ABC--1234}, \texttt{ABC-12A4} e
+\texttt{ABC1-234}.
+
+% ------------------------------------------------------------------
+\subsection{AFD 02: padrão Mercosul}
+
+O padrão Mercosul tem a sequência LLLNLNN: três letras, um
+algarismo, uma letra e dois algarismos. Neste reconhecedor geral, a
+quinta posição aceita qualquer letra de A a Z.
+
+\subsubsection{Definição formal}
+
+$M_2 = (Q_2, \Sigma, \delta_2, q_0, F_2)$, em que
+\begin{align*}
+  Q_2 &= \{q_0, q_1, q_2, q_3, q_4, q_5, q_6, q_7, q_R\},\\
+  F_2 &= \{q_7\}.
+\end{align*}
+
+Os estados $q_1$, $q_2$ e $q_3$ registram as três letras iniciais;
+$q_4$ registra o primeiro algarismo; $q_5$ registra a letra da quinta
+posição; $q_6$ e $q_7$ registram os dois algarismos finais.
+
+\subsubsection{Função de transição}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
+\toprule
+$\delta_2$ & $\Lt$ & $\Nm$ & $\Hf$ \\
+\midrule
+$\to q_0$ & $q_1$ & $q_R$ & $q_R$ \\
+$q_1$     & $q_2$ & $q_R$ & $q_R$ \\
+$q_2$     & $q_3$ & $q_R$ & $q_R$ \\
+$q_3$     & $q_R$ & $q_4$ & $q_R$ \\
+$q_4$     & $q_5$ & $q_R$ & $q_R$ \\
+$q_5$     & $q_R$ & $q_6$ & $q_R$ \\
+$q_6$     & $q_R$ & $q_7$ & $q_R$ \\
+$* q_7$   & $q_R$ & $q_R$ & $q_R$ \\
+$q_R$     & $q_R$ & $q_R$ & $q_R$ \\
+\bottomrule
+\end{tabular}
+\caption{Função de transição do AFD 02.}
+\label{tab:delta2}
+\end{table}
+
+\subsubsection{Linguagem reconhecida}
+
+\[
+  \lang{Mercosul} = \Lt^3 \cdot \Nm \cdot \Lt \cdot \Nm^2
+\]
+
+São aceitas \texttt{BRA2E19}, \texttt{QTP9Z01} e \texttt{ABC1D23}.
+São rejeitadas \texttt{AB12C34}, \texttt{ABC12D3}, \texttt{ABC1D2A}
+e \texttt{ABC-1D23}.
+
+% ------------------------------------------------------------------
+\subsection{AFD 03: Mercosul convertido (extensão opcional)}
+
+Como extensão, a quinta posição pode ser restrita às letras de A
+até J, conjunto $\LAJ = \{A, B, C, D, E, F, G, H, I, J\}$. A
+estrutura continua sendo LLLNLNN.
+
+\subsubsection{Definição formal}
+
+$M_3 = (Q_3, \Sigma, \delta_3, q_0, F_3)$, com $Q_3 = Q_2$ e
+$F_3 = \{q_7\}$. A função $\delta_3$ coincide com $\delta_2$, exceto
+nas transições que partem de $q_4$:
+\[
+  \delta_3(q_4, a) =
+  \begin{cases}
+    q_5 & \text{se } a \in \LAJ,\\
+    q_R & \text{se } a \in \Lt \setminus \LAJ.
+  \end{cases}
+\]
+
+\subsubsection{Linguagem reconhecida}
+
+\[
+  \lang{Conv} = \Lt^3 \cdot \Nm \cdot \LAJ \cdot \Nm^2
+\]
+
+Vale $\lang{Conv} \subseteq \lang{Mercosul}$. O AFD verifica apenas a
+restrição formal da quinta posição; ele não determina a origem ou o
+histórico real de uma placa.
+
+% ------------------------------------------------------------------
+\subsection{Reconhecimento combinado}
+
+O programa principal executa os dois reconhecedores obrigatórios de
+forma independente: primeiro o AFD 01 e, se ele rejeitar a entrada,
+o AFD 02. A placa é aceita se pelo menos um deles a aceitar:
+\[
+  \lang{Validador} = \lang{PNU} \cup \lang{Mercosul}.
+\]
+A versão restrita (AFD 03) pode ser usada como verificação adicional,
+sem substituir o reconhecedor Mercosul geral.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccl}
+\toprule
+Entrada & AFD 01 & AFD 02 & Resultado \\
+\midrule
+\texttt{ABC-1234} & aceita  & rejeita & válida (anterior) \\
+\texttt{ABC1234}  & aceita  & rejeita & válida (anterior) \\
+\texttt{BRA2E19}  & rejeita & aceita  & válida (Mercosul) \\
+\texttt{QTP9Z01}  & rejeita & aceita  & válida (Mercosul) \\
+\texttt{AB12C34}  & rejeita & rejeita & inválida \\
+\texttt{ABC12D3}  & rejeita & rejeita & inválida \\
+\texttt{ABC1D2A}  & rejeita & rejeita & inválida \\
+\bottomrule
+\end{tabular}
+\caption{Classificação de entradas pelos dois reconhecedores.}
+\label{tab:classificacao}
+\end{table}
