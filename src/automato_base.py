@@ -21,4 +21,19 @@ class AutomatoFinito:
                         return "H"
                 else:
                         return "OUTRO"
-        
+
+
+        # Parte principal da classe, percorre cada caractere da entrada, e retorna a categoria dele usando o metodo de classificação, O .get() 
+        # consulta o dicionário de transições usando uma tupla: (estado_atual, simbolo) Se essa transição existir, o método retorna o próximo estado.
+        #Se não existir, retorna qR, nosso estado de rejeição.
+
+        def executar(self, entrada):
+                estado_atual = self.estado_inicial
+
+                for char in entrada:
+                        sim = self.classificar_char(char)
+
+
+                        estado_atual = self.transicoes.get((estado_atual, sim), self.estado_rejeicao)
+
+                return estado_atual in self.estados_finais
