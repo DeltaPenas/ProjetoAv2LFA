@@ -1,4 +1,4 @@
-from automato_base import AutomatoFinito
+from automatos.automato_base import AutomatoFinito
 
 
 
