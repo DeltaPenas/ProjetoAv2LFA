@@ -1,0 +1,15 @@
+\section{Como a Solução Funciona}
+
+O validador lê a placa da esquerda para a direita, um caractere
+por vez, e mantém apenas uma informação: em que ``etapa'' da placa
+está. Por exemplo, depois de ler três letras, a etapa seguinte
+espera um algarismo (ou um hífen, no padrão anterior). Se aparecer
+um caractere que não cabe naquela etapa, a placa é descartada na
+hora. Se a leitura terminar exatamente na última etapa prevista, a
+placa é aceita.
+
+Cada ``etapa'' é um \emph{estado} do autômato, e a regra de passagem
+de uma etapa para outra é a \emph{função de transição}. Como o
+número de etapas é pequeno e fixo, o validador é rápido e seu
+comportamento é totalmente previsível: a mesma entrada sempre
+produz a mesma resposta.

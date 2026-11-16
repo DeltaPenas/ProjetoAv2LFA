@@ -10,25 +10,35 @@
 \usepackage[alf]{abntex2cite}
 \usepackage{hyperref}
 
-% --- notação do trabalho ---
-\newcommand{\Lt}{\mathsf{L}}   % classe das letras
-\newcommand{\Nm}{\mathsf{N}}   % classe dos algarismos
-\newcommand{\Hf}{\mathsf{H}}   % classe do hífen
+
+\newcommand{\Lt}{\mathsf{L}}  
+\newcommand{\Nm}{\mathsf{N}}  
+\newcommand{\Hf}{\mathsf{H}}  
 \newcommand{\LAJ}{\Lt_{\mathrm{AJ}}}
 \newcommand{\lang}[1]{\mathcal{L}(\mathrm{#1})}
 \newtheorem{definicao}{Definição}
 
 \title{Validador de Placas Veiculares Brasileiras\\
        via Autômato Finito Determinístico}
-\author{Nome 1 \and Nome 2 \and Nome 3 \and Nome 4}
+\author{Celso Vinicius Souza Silva \and Daniel Paulino da Silva Neto \and João Gabriel da Silva Nemezio \and Wlademir Pontes Xavier}
 \date{\today}
 
 \begin{document}
 \maketitle
+\begin{abstract}
+Este trabalho apresenta um validador de placas veiculares
+brasileiras, capaz de reconhecer o padrão anterior ao Mercosul e o padrão
+Mercosul . A solução é modelada por autômatos finitos
+determinísticos, cuja definição formal, diagramas e prova de
+minimalidade são apresentados. O validador confere apenas o
+formato da placa, e não a sua existência em cadastros oficiais.
+\end{abstract}
 
-
+\input{secoes/01-introducao}
+\input{secoes/02-como-funciona}
 \input{secoes/03-especificacao}
 \input{secoes/04-modelagem}
+
 
 \bibliographystyle{abntex2-alf}
 \bibliography{referencias}

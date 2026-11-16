@@ -197,4 +197,20 @@ Entrada & AFD 01 & AFD 02 & Resultado \\
 \end{tabular}
 \caption{Classificação de entradas pelos dois reconhecedores.}
 \label{tab:classificacao}
+\begin{definicao}
+Um autômato finito determinístico é uma tupla
+$M = (Q, \Sigma, \delta, q_0, F)$, em que $Q$ é o conjunto de
+estados, $\Sigma$ o alfabeto, $\delta : Q \times \Sigma \to Q$ a
+função de transição, $q_0$ o estado inicial e $F \subseteq Q$ o
+conjunto de estados finais \cite{hopcroft2002}.
+\end{definicao}
+
+\emph{Em palavras:} $Q$ são as etapas da leitura, $\Sigma$ são os
+caracteres permitidos, $\delta$ diz para qual etapa ir ao ler cada
+caractere, $q_0$ é onde a leitura começa e $F$ são as etapas em que
+a placa é considerada válida.
+
+\emph{Em palavras:} o AFD 01 exige três letras, aceita um hífen
+opcional e termina em quatro algarismos. Qualquer outro
+caractere, em qualquer ponto, leva ao estado de erro $q_R$.
 \end{table}

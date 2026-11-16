@@ -1,0 +1,42 @@
+\section{Contexto e Problema}
+
+Sistemas de estacionamento, pedágio, cadastro de veículos e
+seguros recebem placas digitadas por pessoas. Erros de digitação,
+caracteres trocados e formatos misturados são comuns, e cada falha
+só aparece depois, quando a consulta ao cadastro não encontra o
+veículo.
+
+O Brasil convive com dois formatos de placa: o anterior ao
+Mercosul, com três letras e quatro algarismos, e o Mercosul, com
+três letras, um algarismo, uma letra e dois algarismos
+\cite{contran780,contran741}. Um validador que confere o formato
+antes da consulta evita requisições inúteis e dá retorno imediato
+a quem digita.
+
+\subsection{O que foi entregue}
+
+\begin{itemize}
+  \item uma especificação precisa do que é e do que não é uma placa
+        válida;
+  \item um modelo matemático (autômato finito determinístico) que
+        decide a validade de forma exata e previsível;
+  \item uma implementação em Python que segue o modelo e foi testada
+        com casos válidos e inválidos;
+  \item a demonstração de que o modelo não tem estados desnecessários.
+\end{itemize}
+
+\subsection{O que não faz parte do escopo}
+
+O validador reconhece a \emph{estrutura} da sequência de
+caracteres. Elementos visuais da chapa (cor, faixa azul, QR Code,
+bandeira, logotipo e tipografia) não são avaliados, e reconhecer o
+formato não comprova que a placa esteja registrada ou vinculada a
+um veículo.
+
+\subsection{Como ler este documento}
+
+A Seção~2 define o que o validador aceita e rejeita, com exemplos.
+A Seção~3 explica a ideia da solução sem formalismo. As Seções~4 a
+6 trazem o modelo matemático, os diagramas e a garantia de que o
+autômato é mínimo. A Seção~7 mostra os testes, e a Seção~8
+discute limitações e evolução.
