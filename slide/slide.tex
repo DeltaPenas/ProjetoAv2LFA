@@ -1,0 +1,156 @@
+\documentclass{beamer}
+--tema do slide--
+\usetheme{Madrid}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+\usepackage{booktabs}
+
+\newcommand{\Lt}{\mathsf{L}}
+\newcommand{\Nm}{\mathsf{N}}
+\newcommand{\Hf}{\mathsf{H}}
+\newcommand{\LAJ}{\Lt_{\mathrm{AJ}}}
+\newcommand{\lang}[1]{\mathcal{L}(\mathrm{#1})}
+
+\title{Validador de Placas Veiculares Brasileiras}
+\subtitle{Via Autômato Finito Determinístico}
+\author[]{Nome Daniel Paulino \and Nome Wlademir Pontes \and Nome João Gabriel \and Nome Celso Vinícius}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Sumário}
+\tableofcontents
+\end{frame}
+
+\section{Objetivo}
+
+\begin{frame}{Objetivo}
+\begin{itemize}
+\item Validar placas de veículos brasileiras de forma formal
+\item Modelar a linguagem das placas como linguagem regular
+\item Construir um Autômato Finito Determinístico que reconhece $\lang{Placas}$
+\item Implementar o validador em Python
+\end{itemize}
+\end{frame}
+
+\section{Especificação}
+
+\begin{frame}{Especificação - Alfabeto}
+\begin{itemize}
+\item $\Lt$ = classe das letras: $\{A, B, \dots, Z\}$
+\item $\Nm$ = classe dos algarismos: $\{0, 1, \dots, 9\}$
+\item $\Hf$ = classe do hífen: $\{-\}$
+\item Alfabeto total: $\Sigma = \Lt \cup \Nm \cup \Hf$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Especificação - Linguagem}
+\begin{itemize}
+\item Padrão antigo: $\Lt\Lt\Lt \Hf \Nm\Nm\Nm\Nm$
+\item Exemplo: \texttt{ABC-1234}
+\item Padrão Mercosul: $\Lt\Lt\Lt \Nm \LAJ \Nm\Nm$
+\item Exemplo: \texttt{ABC1D23}
+\item $\LAJ$ = letra restrita da 5ª posição no Mercosul
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Definição Formal}
+\begin{block}{Linguagem das Placas}
+\[
+\lang{Placas} = \lang{Antigo} \cup \lang{Mercosul}
+\]
+onde cada placa é uma palavra sobre $\Sigma$ que segue um dos dois padrões.
+\end{block}
+\end{frame}
+
+\section{Modelagem}
+
+\begin{frame}{Modelagem - AFD}
+\begin{itemize}
+\item Autômato Finito Determinístico: $M = (Q, \Sigma, \delta, q_0, F)$
+\item $Q$ = conjunto de estados
+\item $q_0$ = estado inicial
+\item $F$ = estados finais (placa aceita)
+\item $\delta$ = função de transição
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Diagrama do Autômato - Padrão Antigo}
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt, node distance=1.3cm, on grid, auto, ->, >=Stealth]
+\node[state, initial] (q0) {$q_0$};
+\node[state, right=of q0] (q1) {$q_1$};
+\node[state, right=of q1] (q2) {$q_2$};
+\node[state, right=of q2] (q3) {$q_3$};
+\node[state, right=of q3] (q4) {$q_4$};
+\node[state, right=of q4] (q5) {$q_5$};
+\node[state, right=of q5, accepting] (q6) {$q_6$};
+
+\path (q0) edge node {$\Lt$} (q1)
+      (q1) edge node {$\Lt$} (q2)
+      (q2) edge node {$\Lt$} (q3)
+      (q3) edge node {$\Hf$} (q4)
+      (q4) edge node {$\Nm$} (q5)
+      (q5) edge node {$\Nm$} (q6);
+\end{tikzpicture}
+\end{center}
+\vspace{0.3cm}
+\small{Exemplo simplificado. No trabalho completo, cada $\Nm$ e $\Lt$ se expande para os 4 dígitos / 3 letras.}
+\end{frame}
+
+\begin{frame}{Tabela de Transições}
+\begin{center}
+\begin{tabular}{c|c|c|c}
+\toprule
+Estado & $\Lt$ & $\Nm$ & $\Hf$ \\
+\midrule
+$q_0$ & $q_1$ & - & - \\
+$q_1$ & $q_2$ & - & - \\
+$q_2$ & $q_3$ & - & - \\
+$q_3$ & - & - & $q_4$ \\
+$q_4$ & - & $q_5$ & - \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\section{Implementação e Testes}
+
+\begin{frame}{Implementação}
+\begin{itemize}
+\item \texttt{automato\_base.py} - estrutura genérica do AFD
+\item \texttt{automato\_mercosul.py} - regras do Mercosul
+\item \texttt{automato\_antigo.py} - regras do padrão antigo
+\item \texttt{validador.py} - une os dois autômatos
+\item \texttt{main.py} - interface de execução
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Testes}
+\begin{itemize}
+\item \texttt{tests/test\_placas.py}
+\item Casos válidos: \texttt{ABC-1234}, \texttt{ABC1D23}
+\item Casos inválidos: \texttt{ABC-12}, \texttt{ABCD-123}, \texttt{ABC-123A}
+\item Testa aceitação e rejeição do AFD
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusão}
+O AFD reconhece exatamente $\lang{Placas}$, provando que a validação pode ser feita de forma formal, eficiente e sem expressões regulares ad-hoc.
+\end{frame}
+
+\begin{frame}{Obrigado!}
+\begin{center}
+\Large Perguntas?
+\end{center}
+\end{frame}
+
+\end{document}
