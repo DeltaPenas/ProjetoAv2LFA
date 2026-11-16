@@ -34,6 +34,8 @@ class AutomatoFinito:
                         sim = self.classificar_char(char)
                         estado_atual = self.transicoes.get((estado_atual, sim), self.estado_rejeicao)
 
+                
+
                 return estado_atual in self.estados_finais
 
 
