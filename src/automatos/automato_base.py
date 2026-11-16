@@ -39,4 +39,16 @@ class AutomatoFinito:
                 return estado_atual in self.estados_finais
 
 
+        # Metodo geral pra imprimir os estados, um por um
+        def imprimirEstados(self, placa):
+                estado = "q0"
+
+                for char in placa:
+                        simbulo = self.classificar_char(char)
+                        proximo = self.transicoes.get((estado, simbulo), self.estado_rejeicao)
+                        print(f"Caractere: {char} / Símbolo: {simbulo} / {estado} > {proximo}")
+                        estado = proximo
+
+
+
 

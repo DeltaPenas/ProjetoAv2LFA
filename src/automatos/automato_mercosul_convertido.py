@@ -1,6 +1,7 @@
 from automatos.automato_base import AutomatoFinito
 
 
+
 # definição das transições para o comportamento do AFD
 transicoes = {
     ("q0", "L"): "q1",
@@ -25,13 +26,7 @@ def validar(placa):
         estados_finais={"q7"}
     )
 
-    # adicionei um laço for pra imprimir o caractere, simbulo, o estado atual e o proximo estado.
-    estado = "q0"
     
-    for char in placa:
-        simbulo = automato.classificar_char(char)
-        proximo = automato.transicoes.get((estado, simbulo), automato.estado_rejeicao)
-        print(f"Caractere: {char} / Símbolo: {simbulo} / {estado} > {proximo}")
-        estado = proximo
+    automato.imprimirEstados(placa)
 
     return automato.executar(placa)
