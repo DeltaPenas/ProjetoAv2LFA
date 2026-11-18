@@ -1,0 +1,211 @@
+
+\section{Diagrama de transição}
+
+Esta seção apresenta a representação gráfica dos Autômatos
+Finitos Determinísticos definidos na Seção 04. Os diagramas
+demonstram os estados, as transições e os estados finais de
+cada reconhecedor.
+
+Em todos os diagramas, as setas indicam o sentido da leitura
+dos caracteres. O estado inicial é indicado por uma seta
+externa, enquanto os estados finais são representados por
+círculos duplos.
+
+As transições não representadas explicitamente direcionam
+a leitura para o estado de rejeição $q_R$, que possui
+transição para si mesmo para qualquer símbolo do alfabeto.
+
+% --------------------------------------------------
+% CONFIGURAÇÃO DOS ESTADOS E TRANSIÇÕES
+% --------------------------------------------------
+
+\tikzset{
+    estado/.style={
+        state,
+        minimum size=9mm,
+        font=\small
+    },
+    inicial/.style={
+        estado,
+        initial
+    },
+    final/.style={
+        estado,
+        accepting
+    },
+    rejeicao/.style={
+        estado,
+        fill=red!10
+    },
+    transicao/.style={
+        ->,
+        >=Stealth,
+        semithick
+    }
+}
+
+% --------------------------------------------------
+\subsection{AFD 01 -- Padrão Nacional Único (PNU)}
+
+O primeiro autômato reconhece placas compostas por três
+letras seguidas de quatro algarismos, permitindo a presença
+opcional de um hífen após a terceira letra.
+
+O diagrama apresenta dois caminhos possíveis a partir
+do estado $q_3$: um caminho direto para a leitura dos
+algarismos, quando não existe hífen, e outro que passa
+pelo estado $q_4$, quando o hífen está presente.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=1.25cm]
+
+    \node[inicial] (q0) {$q_0$};
+    \node[estado, right=of q0] (q1) {$q_1$};
+    \node[estado, right=of q1] (q2) {$q_2$};
+    \node[estado, right=of q2] (q3) {$q_3$};
+
+    \node[estado, below=1.2cm of q3] (q4) {$q_4$};
+
+    \node[estado, right=1.7cm of q3] (q5) {$q_5$};
+    \node[estado, right=of q5] (q6) {$q_6$};
+    \node[estado, right=of q6] (q7) {$q_7$};
+    \node[final, right=of q7] (q8) {$q_8$};
+
+    \node[rejeicao, below=2cm of q5] (qr) {$q_R$};
+
+    \path[transicao]
+        (q0) edge node[above] {$\Lt$} (q1)
+        (q1) edge node[above] {$\Lt$} (q2)
+        (q2) edge node[above] {$\Lt$} (q3)
+
+        (q3) edge node[above] {$\Nm$} (q5)
+        (q3) edge node[left] {$\Hf$} (q4)
+        (q4) edge node[below right] {$\Nm$} (q5)
+
+        (q5) edge node[above] {$\Nm$} (q6)
+        (q6) edge node[above] {$\Nm$} (q7)
+        (q7) edge node[above] {$\Nm$} (q8)
+
+        (qr) edge[loop below]
+        node[below] {$\Sigma$} (qr);
+
+\end{tikzpicture}
+\caption{Diagrama de transição do AFD 01 -- PNU.}
+\label{fig:afd-pnu}
+\end{figure}
+
+O estado final é $q_8$, alcançado após a leitura das
+três letras e dos quatro algarismos. A presença do hífen
+é opcional, sendo permitida somente após a terceira letra.
+
+% --------------------------------------------------
+\subsection{AFD 02 -- Padrão Mercosul}
+
+O segundo autômato reconhece placas no formato LLLNLNN,
+composto por três letras, um algarismo, uma letra e dois
+algarismos.
+
+Diferentemente do primeiro autômato, este reconhecedor
+não permite a utilização de hífen em nenhuma posição.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=1.35cm]
+
+    \node[inicial] (q0) {$q_0$};
+    \node[estado, right=of q0] (q1) {$q_1$};
+    \node[estado, right=of q1] (q2) {$q_2$};
+    \node[estado, right=of q2] (q3) {$q_3$};
+    \node[estado, right=of q3] (q4) {$q_4$};
+    \node[estado, right=of q4] (q5) {$q_5$};
+    \node[estado, right=of q5] (q6) {$q_6$};
+    \node[final, right=of q6] (q7) {$q_7$};
+
+    \node[rejeicao, below=1.8cm of q4] (qr) {$q_R$};
+
+    \path[transicao]
+        (q0) edge node[above] {$\Lt$} (q1)
+        (q1) edge node[above] {$\Lt$} (q2)
+        (q2) edge node[above] {$\Lt$} (q3)
+        (q3) edge node[above] {$\Nm$} (q4)
+        (q4) edge node[above] {$\Lt$} (q5)
+        (q5) edge node[above] {$\Nm$} (q6)
+        (q6) edge node[above] {$\Nm$} (q7)
+
+        (qr) edge[loop below]
+        node[below] {$\Sigma$} (qr);
+
+\end{tikzpicture}
+\caption{Diagrama de transição do AFD 02 -- Mercosul.}
+\label{fig:afd-mercosul}
+\end{figure}
+
+O estado final $q_7$ indica que toda a sequência exigida
+foi reconhecida corretamente. Qualquer caractere fora
+da sequência esperada conduz ao estado de rejeição $q_R$.
+
+% --------------------------------------------------
+\subsection{AFD 03 -- Mercosul convertido}
+
+O terceiro autômato é uma extensão do reconhecedor
+Mercosul. Sua estrutura permanece LLLNLNN, porém a
+quinta posição da placa aceita exclusivamente letras
+pertencentes ao conjunto $\LAJ$ (A até J).
+
+Por esse motivo, a única diferença em relação ao AFD 02
+está na transição que parte de $q_4$.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=1.35cm]
+
+    \node[inicial] (q0) {$q_0$};
+    \node[estado, right=of q0] (q1) {$q_1$};
+    \node[estado, right=of q1] (q2) {$q_2$};
+    \node[estado, right=of q2] (q3) {$q_3$};
+    \node[estado, right=of q3] (q4) {$q_4$};
+    \node[estado, right=of q4] (q5) {$q_5$};
+    \node[estado, right=of q5] (q6) {$q_6$};
+    \node[final, right=of q6] (q7) {$q_7$};
+
+    \node[rejeicao, below=1.8cm of q4] (qr) {$q_R$};
+
+    \path[transicao]
+        (q0) edge node[above] {$\Lt$} (q1)
+        (q1) edge node[above] {$\Lt$} (q2)
+        (q2) edge node[above] {$\Lt$} (q3)
+        (q3) edge node[above] {$\Nm$} (q4)
+        (q4) edge node[above] {$\LAJ$} (q5)
+        (q5) edge node[above] {$\Nm$} (q6)
+        (q6) edge node[above] {$\Nm$} (q7)
+
+        (qr) edge[loop below]
+        node[below] {$\Sigma$} (qr);
+
+\end{tikzpicture}
+\caption{Diagrama de transição do AFD 03 -- Mercosul convertido.}
+\label{fig:afd-convertido}
+\end{figure}
+
+Nesse reconhecedor, caso seja lida uma letra fora do
+conjunto $\LAJ$ na quinta posição, a entrada será
+direcionada ao estado de rejeição $q_R$.
+
+% --------------------------------------------------
+\subsection{Considerações sobre os diagramas}
+
+Os três diagramas representam visualmente as funções
+de transição especificadas na modelagem matemática.
+
+O AFD 01 diferencia-se por permitir duas possibilidades
+de leitura após a terceira letra, enquanto os AFDs 02
+e 03 possuem uma sequência linear de transições.
+
+O AFD 03 mantém a estrutura do AFD 02, restringindo
+apenas o conjunto de caracteres aceitos na quinta posição.
+
+Dessa forma, os autômatos permitem reconhecer os padrões
+de placas definidos no projeto, garantindo que somente
+sequências pertencentes às linguagens especificadas
+sejam aceitas.
