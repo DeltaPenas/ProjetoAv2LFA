@@ -3,6 +3,19 @@
 Esta seção especifica os AFDs que reconhecem os padrões de placa
 definidos na especificação da linguagem.
 
+\begin{definicao}
+Um autômato finito determinístico é uma tupla
+$M = (Q, \Sigma, \delta, q_0, F)$, em que $Q$ é o conjunto de
+estados, $\Sigma$ o alfabeto, $\delta : Q \times \Sigma \to Q$ a
+função de transição, $q_0$ o estado inicial e $F \subseteq Q$ o
+conjunto de estados finais \cite{hopcroft2002}.
+\end{definicao}
+
+\emph{Em palavras:} $Q$ são as etapas da leitura, $\Sigma$ são os
+caracteres permitidos, $\delta$ diz para qual etapa ir ao ler cada
+caractere, $q_0$ é onde a leitura começa e $F$ são as etapas em que
+a placa é considerada válida.
+
 \subsection{Notação e alfabeto}
 
 \begin{center}
@@ -27,13 +40,16 @@ Nas tabelas, $\Lt$, $\Nm$ e $\Hf$ representam qualquer símbolo da
 classe correspondente. Toda transição não indicada leva ao estado
 de rejeição $q_R$, e $\delta(q_R, a) = q_R$ para todo $a \in \Sigma$.
 
-% ------------------------------------------------------------------
 \subsection{AFD 01: padrão anterior ao Mercosul (PNU)}
 
 O padrão anterior tem três letras seguidas de quatro algarismos. Na
 chapa física, o hífen pode aparecer depois das três letras; em
 registros de dados, pode estar ausente. A linguagem é, portanto,
 $\Lt^3\,\Hf?\,\Nm^4$.
+
+\emph{Em palavras:} o AFD 01 exige três letras, aceita um hífen
+opcional e termina em quatro algarismos. Qualquer outro
+caractere, em qualquer ponto, leva ao estado de erro $q_R$.
 
 \subsubsection{Definição formal}
 
@@ -49,7 +65,7 @@ quatro algarismos; $q_R$ é o estado de rejeição.
 
 \subsubsection{Função de transição}
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \begin{tabular}{cccc}
 \toprule
@@ -86,12 +102,15 @@ São aceitas \texttt{ABC-1234} e \texttt{ABC1234}. São rejeitadas
 \texttt{AB-12345}, \texttt{ABC--1234}, \texttt{ABC-12A4} e
 \texttt{ABC1-234}.
 
-% ------------------------------------------------------------------
 \subsection{AFD 02: padrão Mercosul}
 
 O padrão Mercosul tem a sequência LLLNLNN: três letras, um
 algarismo, uma letra e dois algarismos. Neste reconhecedor geral, a
 quinta posição aceita qualquer letra de A a Z.
+
+\emph{Em palavras:} o AFD 02 exige três letras, um algarismo, uma
+letra e dois algarismos, nessa ordem. O hífen não é aceito, e
+qualquer outro caractere fora do lugar leva ao estado de erro $q_R$.
 
 \subsubsection{Definição formal}
 
@@ -107,7 +126,7 @@ posição; $q_6$ e $q_7$ registram os dois algarismos finais.
 
 \subsubsection{Função de transição}
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \begin{tabular}{cccc}
 \toprule
@@ -138,12 +157,15 @@ São aceitas \texttt{BRA2E19}, \texttt{QTP9Z01} e \texttt{ABC1D23}.
 São rejeitadas \texttt{AB12C34}, \texttt{ABC12D3}, \texttt{ABC1D2A}
 e \texttt{ABC-1D23}.
 
-% ------------------------------------------------------------------
 \subsection{AFD 03: Mercosul convertido (extensão opcional)}
 
 Como extensão, a quinta posição pode ser restrita às letras de A
 até J, conjunto $\LAJ = \{A, B, C, D, E, F, G, H, I, J\}$. A
 estrutura continua sendo LLLNLNN.
+
+\emph{Em palavras:} o AFD 03 funciona como o AFD 02, mas a letra da
+quinta posição só pode ser de A a J. Qualquer outra letra nessa
+posição leva ao estado de erro $q_R$.
 
 \subsubsection{Definição formal}
 
@@ -168,7 +190,6 @@ Vale $\lang{Conv} \subseteq \lang{Mercosul}$. O AFD verifica apenas a
 restrição formal da quinta posição; ele não determina a origem ou o
 histórico real de uma placa.
 
-% ------------------------------------------------------------------
 \subsection{Reconhecimento combinado}
 
 O programa principal executa os dois reconhecedores obrigatórios de
@@ -180,7 +201,7 @@ o AFD 02. A placa é aceita se pelo menos um deles a aceitar:
 A versão restrita (AFD 03) pode ser usada como verificação adicional,
 sem substituir o reconhecedor Mercosul geral.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \begin{tabular}{lccl}
 \toprule
@@ -197,20 +218,6 @@ Entrada & AFD 01 & AFD 02 & Resultado \\
 \end{tabular}
 \caption{Classificação de entradas pelos dois reconhecedores.}
 \label{tab:classificacao}
-\begin{definicao}
-Um autômato finito determinístico é uma tupla
-$M = (Q, \Sigma, \delta, q_0, F)$, em que $Q$ é o conjunto de
-estados, $\Sigma$ o alfabeto, $\delta : Q \times \Sigma \to Q$ a
-função de transição, $q_0$ o estado inicial e $F \subseteq Q$ o
-conjunto de estados finais \cite{hopcroft2002}.
-\end{definicao}
-
-\emph{Em palavras:} $Q$ são as etapas da leitura, $\Sigma$ são os
-caracteres permitidos, $\delta$ diz para qual etapa ir ao ler cada
-caractere, $q_0$ é onde a leitura começa e $F$ são as etapas em que
-a placa é considerada válida.
-
-\emph{Em palavras:} o AFD 01 exige três letras, aceita um hífen
-opcional e termina em quatro algarismos. Qualquer outro
-caractere, em qualquer ponto, leva ao estado de erro $q_R$.
 \end{table}
+
+\clearpage
