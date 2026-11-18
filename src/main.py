@@ -1,3 +1,7 @@
 from automatos.automato_mercosul_convertido import validar
+from automatos.identificador_placa import identificar_modelo
 
-print(validar("ABC1A23"))
+resultado = identificar_modelo("ABC1D23")
+
+print(validar("ABC1D23"))
+print(f"O modelo da placa é: {resultado}")
