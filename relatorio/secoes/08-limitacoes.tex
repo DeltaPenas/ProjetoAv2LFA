@@ -1,0 +1,98 @@
+\section{Limitações e Evolução}
+
+\subsection{O que o validador não faz}
+
+O validador responde a uma pergunta específica: ``esta sequência de
+caracteres tem o formato de uma placa brasileira?''. Ele não
+responde a outras perguntas que podem parecer próximas.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{4.2cm} p{4.2cm} p{4.6cm}}
+\toprule
+Limitação & Consequência & Como tratar \\
+\midrule
+Não consulta cadastros
+  & aceita \texttt{ABC1234} mesmo que nenhum veículo tenha essa placa
+  & consulta ao órgão de trânsito, depois da validação do formato \\
+Não distingue placa convertida de placa nova
+  & aceita qualquer letra de A a Z na 5ª posição do Mercosul
+  & usar o AFD 03, como verificação adicional \\
+Aceita só letras maiúsculas e sem espaços
+  & \texttt{abc1234} e \texttt{ABC 1234} são rejeitadas
+  & normalizar a entrada antes de validar \\
+Cobre apenas dois formatos
+  & placas fora desses formatos são rejeitadas
+  & acrescentar um autômato por formato novo \\
+Resposta única (válida ou não)
+  & não diz qual padrão foi reconhecido, nem onde está o erro
+  & manter finais separados, ou mensagem por estado \\
+\bottomrule
+\end{tabular}
+\caption{Limitações do validador e formas de tratá-las.}
+\label{tab:limitacoes}
+\end{table}
+
+\subsection{Existência da placa}
+
+Reconhecer o formato não prova que a placa exista. A quantidade de
+cadeias aceitas ($808\,496\,000$, contando as duas grafias do
+padrão anterior) é muito maior que a de placas emitidas, e saber
+quais foram emitidas depende de bases de dados que um autômato não
+tem como conter. Por isso o validador deve ser usado como
+\emph{primeira etapa}: ele barra erros de digitação com resposta
+imediata, e só as placas aprovadas seguem para a consulta ao
+cadastro.
+
+\subsection{Decisões que dependem da regra vigente}
+
+Três decisões do projeto refletem a interpretação adotada neste
+trabalho, e podem mudar se a regra ou o uso mudarem:
+
+\begin{itemize}
+  \item o hífen é aceito de forma opcional no padrão anterior,
+        embora ele seja apenas uma convenção visual da chapa;
+  \item a quinta posição do Mercosul aceita qualquer letra, pois o
+        validador não sabe se a placa foi convertida;
+  \item as letras são consideradas apenas em caixa alta, sem acento.
+\end{itemize}
+
+As normas que definem as placas são resoluções do CONTRAN
+\cite{contran780,contran741} e podem ser alteradas. Se isso
+acontecer, basta ajustar a especificação, refazer a tabela de
+transição e repetir a verificação. O projeto foi organizado para
+que essa revisão seja pequena.
+
+\subsection{Limite do modelo}
+
+Todo o conjunto de placas é finito, então qualquer linguagem desse
+tipo é regular e o autômato finito é suficiente. Um modelo mais
+poderoso só seria necessário para regras que exigem memória
+ilimitada, o que não é o caso aqui. Também por isso o autômato
+pequeno (11 estados no produto mínimo) consegue substituir uma lista
+com mais de seiscentos milhões de placas possíveis.
+
+\subsection{Evolução possível}
+
+\begin{itemize}
+  \item \textbf{Normalização da entrada:} converter minúsculas em
+        maiúsculas e remover espaços antes da validação, para
+        aceitar o que o usuário digita naturalmente.
+  \item \textbf{Classificação do padrão:} usar o autômato de 14
+        estados, com finais separados, para informar se a placa é
+        do padrão anterior ou do Mercosul.
+  \item \textbf{Validação durante a digitação:} como cada estado
+        representa uma etapa da placa, o validador pode avisar a
+        cada caractere se o que foi digitado ainda pode formar uma
+        placa válida.
+  \item \textbf{Mensagens de erro específicas:} o estado em que a
+        leitura falha indica o que estava esperado, por exemplo
+        ``falta um algarismo na 4ª posição''.
+  \item \textbf{Extração em textos livres:} procurar placas dentro
+        de um texto, como o de uma multa ou de um e-mail, usando o
+        reconhecimento do maior trecho possível.
+  \item \textbf{Integração com cadastros:} encadear o validador com
+        a consulta ao órgão de trânsito.
+\end{itemize}

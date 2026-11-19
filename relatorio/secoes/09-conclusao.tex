@@ -1,0 +1,48 @@
+\section{Conclusão}
+
+Este trabalho especificou, modelou e implementou um validador de
+placas de veículos brasileiras. O problema foi tratado como o
+reconhecimento de uma linguagem regular, resolvido por autômatos
+finitos determinísticos.
+
+\subsection{O que foi entregue}
+
+\begin{itemize}
+  \item uma especificação objetiva do que é uma placa válida, com
+        as decisões de projeto registradas (Seção~2);
+  \item a definição formal de três autômatos, um para o padrão
+        anterior ao Mercosul, um para o Mercosul e um para o
+        Mercosul de placas convertidas (Seção~4);
+  \item os diagramas de transição (Seção~5);
+  \item a demonstração de que cada autômato é mínimo, e a redução
+        do validador combinado de 14 para 11 estados (Seção~6);
+  \item uma implementação em Python, testada com casos válidos e
+        inválidos, e comparada com a expressão regular em
+        $29\,524$ cadeias, sem divergência (Seção~7).
+\end{itemize}
+
+\subsection{O que se aprendeu}
+
+A modelagem mostrou que o problema tem uma estrutura simples: a
+placa é uma sequência de etapas, e cada estado do autômato
+representa uma delas. Isso explica por que os autômatos dos dois
+padrões são mínimos por si sós. A única redução aconteceu ao
+juntá-los: estados que esperam a mesma continuação, como os dois
+algarismos finais, passaram a ser um só.
+
+O trabalho também deixou claro o que o formalismo garante e o que
+não garante. Ele garante resposta exata e previsível para o
+formato, e permite provar que está correta. Ele não garante que a
+placa exista, e as decisões sobre hífen, letras maiúsculas e
+quinta posição do Mercosul precisaram ser tomadas e documentadas,
+pois a norma sozinha não as resolve.
+
+\subsection{Considerações finais}
+
+Para quem vai usar o validador, o resultado prático é uma
+verificação rápida e confiável do formato da placa, que reduz
+erros de digitação antes de qualquer consulta a cadastros. Para a
+equipe, o trabalho mostrou como a teoria de autômatos se aplica a
+um problema do dia a dia, do modelo matemático ao código, e como
+cada etapa pode ser verificada. As limitações e as possibilidades
+de evolução estão na Seção~8.
