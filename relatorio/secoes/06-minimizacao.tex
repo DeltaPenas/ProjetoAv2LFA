@@ -1,0 +1,195 @@
+\section{Garantia de Minimalidade}
+
+Um autômato é \emph{mínimo} quando nenhum de seus estados pode ser
+removido ou fundido com outro sem alterar o conjunto de placas
+aceitas. Mostrar que o modelo é mínimo garante que ele não tem
+etapas redundantes: cada estado guarda uma informação que nenhum
+outro guarda.
+
+\subsection{Método}
+
+Dois estados $p$ e $q$ são \emph{distinguíveis} quando existe uma
+cadeia $w$ tal que exatamente um entre $\hat{\delta}(p,w)$ e
+$\hat{\delta}(q,w)$ é final. Estados que não podem ser
+distinguidos são \emph{equivalentes} e podem ser fundidos
+\cite{hopcroft2002}.
+
+O algoritmo de refinamento de partições (Moore) funciona assim:
+\begin{enumerate}
+  \item $P_0 = \{\,F,\; Q \setminus F\,\}$.
+  \item Em cada rodada, dois estados continuam no mesmo bloco
+        apenas se, para cada classe de símbolos, suas transições
+        levam a estados que estavam em um mesmo bloco na rodada
+        anterior.
+  \item Repete-se até que a partição não mude. Os blocos finais
+        são os estados do autômato mínimo.
+\end{enumerate}
+
+Como os símbolos de uma mesma classe se comportam do mesmo modo,
+basta comparar as transições por classe ($\Lt$, $\Nm$ e $\Hf$). O
+método exige que todos os estados sejam alcançáveis a partir de
+$q_0$, o que vale para todos os autômatos deste trabalho.
+
+
+\subsection{AFD 01}
+
+A partição inicial separa o único estado final dos demais:
+\[
+  P_0 = \bigl\{\, \{q_8\},\; \{q_0,q_1,q_2,q_3,q_4,q_5,q_6,q_7,q_R\} \,\bigr\}.
+\]
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c p{3.4cm} p{7.6cm}}
+\toprule
+Rodada & Blocos isolados & Motivo \\
+\midrule
+$P_1$ & $\{q_7\}$
+  & $q_7 \xrightarrow{\Nm} q_8$, que é final; nenhum outro estado do bloco chega a um final em um passo. \\
+$P_2$ & $\{q_6\}$
+  & $q_6 \xrightarrow{\Nm} q_7$, já isolado. \\
+$P_3$ & $\{q_5\}$
+  & $q_5 \xrightarrow{\Nm} q_6$, já isolado. \\
+$P_4$ & $\{q_3,q_4\}$ separado de $\{q_0,q_1,q_2,q_R\}$
+  & $q_3 \xrightarrow{\Nm} q_5$ e $q_4 \xrightarrow{\Nm} q_5$, bloco já isolado; os demais não. \\
+$P_5$ & $\{q_3\}$, $\{q_4\}$, $\{q_2\}$
+  & $q_3 \xrightarrow{\Hf} q_4$, mas $q_4 \xrightarrow{\Hf} q_R$ (outro bloco); $q_2 \xrightarrow{\Lt} q_3$. \\
+$P_6$ & $\{q_1\}$
+  & $q_1 \xrightarrow{\Lt} q_2$, já isolado. \\
+$P_7$ & $\{q_0\}$, $\{q_R\}$
+  & $q_0 \xrightarrow{\Lt} q_1$, enquanto $q_R \xrightarrow{\Lt} q_R$. \\
+\bottomrule
+\end{tabular}
+\caption{Refinamento de partições do AFD 01.}
+\label{tab:min1}
+\end{table}
+
+Na rodada $P_7$ todos os blocos têm um único estado, e nenhuma nova
+separação é possível. Portanto os 10 estados do AFD 01 são
+distinguíveis dois a dois, e o autômato é mínimo. O par que exigiu
+mais cuidado foi $q_3$ e $q_4$: ambos aceitam \texttt{1234} como
+continuação, mas apenas $q_3$ aceita \texttt{-1234}. Outro exemplo:
+a partir de $q_0$ a cadeia \texttt{ABC1234} é aceita, e a partir de
+$q_R$ nenhuma cadeia é aceita.
+
+
+\subsection{AFD 02 e AFD 03}
+
+No AFD 02, a partição inicial é
+$P_0 = \bigl\{ \{q_7\},\; \{q_0,\dots,q_6,q_R\} \bigr\}$. Como o
+autômato é uma cadeia de etapas, cada rodada isola o estado
+anterior da cadeia.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c p{3.4cm} p{7.6cm}}
+\toprule
+Rodada & Bloco isolado & Motivo \\
+\midrule
+$P_1$ & $\{q_6\}$ & $q_6 \xrightarrow{\Nm} q_7$, que é final. \\
+$P_2$ & $\{q_5\}$ & $q_5 \xrightarrow{\Nm} q_6$, já isolado. \\
+$P_3$ & $\{q_4\}$ & $q_4 \xrightarrow{\Lt} q_5$, já isolado. \\
+$P_4$ & $\{q_3\}$ & $q_3 \xrightarrow{\Nm} q_4$, já isolado. \\
+$P_5$ & $\{q_2\}$ & $q_2 \xrightarrow{\Lt} q_3$, já isolado. \\
+$P_6$ & $\{q_1\}$ & $q_1 \xrightarrow{\Lt} q_2$, já isolado. \\
+$P_7$ & $\{q_0\}$, $\{q_R\}$ & $q_0 \xrightarrow{\Lt} q_1$, enquanto $q_R \xrightarrow{\Lt} q_R$. \\
+\bottomrule
+\end{tabular}
+\caption{Refinamento de partições do AFD 02.}
+\label{tab:min2}
+\end{table}
+
+Todos os blocos de $P_7$ têm um único estado, logo os 9 estados do
+AFD 02 são distinguíveis e o autômato é mínimo.
+
+O AFD 03 tem a mesma estrutura de cadeia. A única diferença é que
+$q_4$ separa as letras em $\LAJ$ e $\Lt \setminus \LAJ$, e isso
+não altera a sequência de rodadas. Assim, o AFD 03 também é
+mínimo, com 9 estados.
+
+\subsection{Validador combinado em um único autômato}
+
+Para ter um único autômato que decide a validade, constrói-se o
+\emph{produto} dos AFDs 01 e 02. Seus estados são pares
+(estado do AFD 01, estado do AFD 02), e um par é final se algum dos
+componentes é final. Apenas 14 pares são alcançáveis.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{cc@{\hspace{2em}}cc}
+\toprule
+Estado & Par & Estado & Par \\
+\midrule
+$u_0$ & $(q_0,q_0)$ & $u_7$ & $(q_R,q_5)$ \\
+$u_1$ & $(q_1,q_1)$ & $u_8$ & $(q_6,q_R)$ \\
+$u_2$ & $(q_2,q_2)$ & $u_9$ & $(q_R,q_6)$ \\
+$u_3$ & $(q_3,q_3)$ & $u_{10}$ & $(q_7,q_R)$ \\
+$u_4$ & $(q_4,q_R)$ & $u_{11}$ (final) & $(q_R,q_7)$ \\
+$u_5$ & $(q_5,q_4)$ & $u_{12}$ (final) & $(q_8,q_R)$ \\
+$u_6$ & $(q_5,q_R)$ & $u_{13}$ & $(q_R,q_R)$ \\
+\bottomrule
+\end{tabular}
+\caption{Estados alcançáveis do produto.}
+\label{tab:produto}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{c p{3.4cm} p{7.6cm}}
+\toprule
+Rodada & Blocos isolados & Motivo \\
+\midrule
+$P_0$ & $\{u_{11},u_{12}\}$ & estados finais. \\
+$P_1$ & $\{u_9,u_{10}\}$ & $u_9 \xrightarrow{\Nm} u_{11}$ e $u_{10} \xrightarrow{\Nm} u_{12}$, ambos finais. \\
+$P_2$ & $\{u_7,u_8\}$ & $u_7 \xrightarrow{\Nm} u_9$ e $u_8 \xrightarrow{\Nm} u_{10}$. \\
+$P_3$ & $\{u_5\}$, $\{u_6\}$ & $u_5 \xrightarrow{\Lt} u_7$, mas $u_6 \xrightarrow{\Lt} u_{13}$; ambos chegam ao bloco $\{u_7,u_8\}$ com $\Nm$. \\
+$P_4$ & $\{u_3\}$, $\{u_4\}$ & $u_3 \xrightarrow{\Nm} u_5$ e $u_4 \xrightarrow{\Nm} u_6$. \\
+$P_5$ & $\{u_2\}$ & $u_2 \xrightarrow{\Lt} u_3$. \\
+$P_6$ & $\{u_1\}$ & $u_1 \xrightarrow{\Lt} u_2$. \\
+$P_7$ & $\{u_0\}$, $\{u_{13}\}$ & $u_0 \xrightarrow{\Lt} u_1$, enquanto $u_{13} \xrightarrow{\Lt} u_{13}$. \\
+\bottomrule
+\end{tabular}
+\caption{Refinamento de partições do produto.}
+\label{tab:min3}
+\end{table}
+
+A partição final tem 11 blocos. Três pares de estados são
+equivalentes: $\{u_7,u_8\}$, $\{u_9,u_{10}\}$ e $\{u_{11},u_{12}\}$.
+Em palavras: $u_7$ (Mercosul) e $u_8$ (padrão anterior) esperam
+exatamente os mesmos dois algarismos finais; $u_9$ e $u_{10}$
+esperam um; $u_{11}$ e $u_{12}$ já terminaram. O que vem depois é
+igual, então o autômato mínimo os trata como um só estado.
+
+Há um custo nessa fusão: o estado final único deixa de informar
+\emph{qual} padrão foi reconhecido. Se o sistema precisar
+classificar a placa, os dois finais devem ser mantidos separados na
+partição inicial, e nesse caso nenhuma fusão ocorre e o autômato
+fica com 14 estados.
+
+
+\subsection{Resumo}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lccl}
+\toprule
+Autômato & Estados antes & Estados depois & Conclusão \\
+\midrule
+AFD 01 (anterior)     & 10 & 10 & já é mínimo \\
+AFD 02 (Mercosul)     & 9  & 9  & já é mínimo \\
+AFD 03 (convertido)   & 9  & 9  & já é mínimo \\
+Produto (validador)   & 14 & 11 & reduzido por 3 fusões \\
+\bottomrule
+\end{tabular}
+\caption{Resultado da minimização.}
+\label{tab:resumo-min}
+\end{table}

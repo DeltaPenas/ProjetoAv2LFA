@@ -1,0 +1,90 @@
+\section{Resultados e Testes}
+
+Esta seção mostra como se verificou que o validador faz o que a
+especificação promete.
+
+\subsection{Casos de teste}
+
+A Tabela~\ref{tab:testes} reúne os casos usados. Eles cobrem os
+dois padrões, valores extremos e os erros mais comuns de
+digitação. O programa de testes automatizados executa cada caso e
+compara a resposta com a coluna ``Esperado''.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{llp{6.3cm}}
+\toprule
+Entrada & Esperado & Motivo \\
+\midrule
+\texttt{ABC1234}   & Válida   & padrão anterior, sem hífen \\
+\texttt{ABC-1234}  & Válida   & padrão anterior, com hífen \\
+\texttt{AAA0000}   & Válida   & padrão anterior, valores extremos \\
+\texttt{BRA2E19}   & Válida   & Mercosul \\
+\texttt{QTP9Z01}   & Válida   & Mercosul, letra de A a Z na 5ª posição \\
+\texttt{ABC1C34}   & Válida   & Mercosul convertido de \texttt{ABC1234} \\
+\texttt{ZZZ9Z99}   & Válida   & Mercosul, valores extremos \\
+\midrule
+\texttt{ABC-1D23}  & Inválida & hífen no Mercosul \\
+\texttt{AB12C34}   & Inválida & apenas 2 letras iniciais \\
+\texttt{ABC12D3}   & Inválida & letra na 6ª posição \\
+\texttt{BRA2E1}    & Inválida & apenas 6 caracteres \\
+\texttt{ABC12345}  & Inválida & algarismo a mais \\
+\texttt{ABC123}    & Inválida & algarismo a menos \\
+\texttt{ABCD123}   & Inválida & quatro letras seguidas \\
+\texttt{ABC1DD3}   & Inválida & letra no lugar de algarismo \\
+\texttt{ABC--1234} & Inválida & dois hífens \\
+\texttt{ABC\textvisiblespace 1234} & Inválida & espaço no meio \\
+\texttt{abc1234}   & Inválida & letras minúsculas \\
+\texttt{ÁBC1234}   & Inválida & letra com acento \\
+(vazia)            & Inválida & cadeia vazia \\
+\bottomrule
+\end{tabular}
+\caption{Casos de teste do validador.}
+\label{tab:testes}
+\end{table}
+
+\subsection{Verificação exaustiva}
+
+Testar casos escolhidos à mão pode deixar passar algum erro. Por
+isso o validador também foi comparado com a expressão regular
+$\Lt^3(\Hf?\,\Nm^4 \mid \Nm\,\Lt\,\Nm^2)$ em \emph{todas} as
+cadeias possíveis sobre as classes $\{\Lt, \Nm, \Hf\}$ de
+comprimento até 9, o que dá
+$\sum_{n=0}^{9} 3^n = 29\,524$ cadeias.
+
+Esse conjunto basta por dois motivos. Primeiro, símbolos da mesma
+classe se comportam do mesmo modo, então um representante por
+classe cobre todos. Segundo, nenhuma placa aceita tem mais de 8
+caracteres, e os estados finais só saem para o estado de erro;
+logo toda cadeia mais longa é rejeitada. Caracteres fora do
+alfabeto também são rejeitados, pois não têm transição definida.
+O script dessa verificação está no apêndice.
+
+\subsection{Quantas placas o validador aceita}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{llr}
+\toprule
+Formato & Cálculo & Cadeias aceitas \\
+\midrule
+Anterior, sem hífen & $26^3 \cdot 10^4$ & $175\,760\,000$ \\
+Anterior, com hífen & $26^3 \cdot 10^4$ & $175\,760\,000$ \\
+Mercosul & $26^3 \cdot 10 \cdot 26 \cdot 10^2$ & $456\,976\,000$ \\
+\midrule
+Total de cadeias & & $808\,496\,000$ \\
+\bottomrule
+\end{tabular}
+\caption{Quantidade de cadeias aceitas.}
+\label{tab:contagem}
+\end{table}
+
+As grafias com e sem hífen representam a mesma placa. Contando cada
+placa uma única vez, o formato admite
+$175\,760\,000 + 456\,976\,000 = 632\,736\,000$ placas distintas.
+Esse é o tamanho do espaço de combinações possíveis, e não o número
+de placas realmente emitidas, que é menor e depende dos cadastros
+oficiais.
