@@ -1,4 +1,5 @@
 \section{Especificação da Linguagem}
+\label{sec:especificacao}
 
 \subsection{Padrões oficiais}
 
@@ -7,8 +8,8 @@ mudanças de município ou estado \cite{contran780}. Sua sequência é
 composta por três letras, um número, uma letra e dois números
 (LLLNLNN), em que L é letra e N é número \cite{contran741}.
 
-\textbf{Padrão anterior ao Mercosul.} Segue a mesma sequência de 
-três letras seguidas de quatro números . O hífen presente na
+\textbf{Padrão anterior ao Mercosul.} Segue a sequência de
+três letras seguidas de quatro números. O hífen presente na
 chapa física (por exemplo, \texttt{ABC-1234}) é apenas visual e não
 faz parte da sequência de caracteres.
 
@@ -30,21 +31,23 @@ algarismos. O alfabeto do autômato é
   \item O hífen é aceito de forma opcional, apenas no padrão anterior
         ao Mercosul, entre a terceira letra e o primeiro número.
   \item Em placas convertidas do sistema antigo, a quinta posição
-        assume apenas letras de A a J. Como o autômato não distingue
-        placa convertida de placa nova, ele aceita qualquer letra de
-        A a Z nessa posição. Porém, foi criado um caso de teste para validar a restrição de A a J.
+        assume apenas letras de A a J. Enquanto o autômato Mercosul
+        geral (AFD 02) aceita qualquer letra de A a Z nessa posição,
+        foi implementado um autômato específico (AFD 03) para validar
+        essa restrição de A a J.
   \item O autômato valida o formato da placa, e não a sua existência.
 \end{enumerate}
 
 \subsection{Expressão regular}
 
 \[
-  L\,L\,L\,\big(\,h?\,N\,N\,N\,N \;\mid\; N\,L\,N\,N\,\big)
+  \Lt\,\Lt\,\Lt\,\big(\,\Hf?\,\Nm\,\Nm\,\Nm\,\Nm \;\mid\; \Nm\,\Lt\,\Nm\,\Nm\,\big)
 \]
 
-em que $h$ representa o hífen.
+em que $\Lt$, $\Nm$ e $\Hf$ representam, respectivamente, uma letra
+maiúscula, um algarismo e o hífen.
 
-\subsection{Casos de teste}
+\subsection{Exemplos iniciais de validação}
 
 \begin{table}[h]
 \centering
@@ -62,6 +65,6 @@ Entrada & Padrão & Resultado & Motivo \\
 \texttt{BRA2E1}   & ---      & Inválida & Apenas 6 caracteres \\
 \bottomrule
 \end{tabular}
-\caption{Entradas de teste do validador.}
-\label{tab:testes}
+\caption{Exemplos iniciais de entradas válidas e inválidas do validador.}
+\label{tab:exemplos-especificacao}
 \end{table}

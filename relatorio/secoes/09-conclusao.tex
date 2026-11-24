@@ -1,4 +1,5 @@
 \section{Conclusão}
+\label{sec:conclusao}
 
 Este trabalho especificou, modelou e implementou um validador de
 placas de veículos brasileiras. O problema foi tratado como o
@@ -9,16 +10,16 @@ finitos determinísticos.
 
 \begin{itemize}
   \item uma especificação objetiva do que é uma placa válida, com
-        as decisões de projeto registradas (Seção~2);
+        as decisões de projeto registradas (Seção~\ref{sec:especificacao});
   \item a definição formal de três autômatos, um para o padrão
         anterior ao Mercosul, um para o Mercosul e um para o
-        Mercosul de placas convertidas (Seção~4);
-  \item os diagramas de transição (Seção~5);
+        Mercosul de placas convertidas (Seção~\ref{sec:modelagem});
+  \item os diagramas de transição (Seção~\ref{sec:diagramas});
   \item a demonstração de que cada autômato é mínimo, e a redução
-        do validador combinado de 14 para 11 estados (Seção~6);
-  \item uma implementação em Python, testada com casos válidos e
-        inválidos, e comparada com a expressão regular em
-        $29\,524$ cadeias, sem divergência (Seção~7).
+        do validador combinado de 14 para 11 estados (Seção~\ref{sec:minimizacao});
+  \item uma implementação em Python, verificada com casos válidos e
+        inválidos e comparada com a expressão regular em
+        $29\,524$ cadeias, sem divergência (Seção~\ref{sec:testes}).
 \end{itemize}
 
 \subsection{O que se aprendeu}
@@ -45,4 +46,4 @@ erros de digitação antes de qualquer consulta a cadastros. Para a
 equipe, o trabalho mostrou como a teoria de autômatos se aplica a
 um problema do dia a dia, do modelo matemático ao código, e como
 cada etapa pode ser verificada. As limitações e as possibilidades
-de evolução estão na Seção~8.
+de evolução estão na Seção~\ref{sec:limitacoes}.

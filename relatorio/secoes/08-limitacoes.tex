@@ -1,4 +1,5 @@
 \section{Limitações e Evolução}
+\label{sec:limitacoes}
 
 \subsection{O que o validador não faz}
 
@@ -20,15 +21,15 @@ Não consulta cadastros
 Não distingue placa convertida de placa nova
   & aceita qualquer letra de A a Z na 5ª posição do Mercosul
   & usar o AFD 03, como verificação adicional \\
-Aceita só letras maiúsculas e sem espaços
-  & \texttt{abc1234} e \texttt{ABC 1234} são rejeitadas
-  & normalizar a entrada antes de validar \\
+AFDs puros aceitam só maiúsculas e sem espaços internos
+  & \texttt{abc1234} (nos AFDs) e \texttt{ABC 1234} são rejeitadas
+  & manter pré-normalização (\texttt{upper/strip}) e remover espaços internos \\
 Cobre apenas dois formatos
   & placas fora desses formatos são rejeitadas
   & acrescentar um autômato por formato novo \\
-Resposta única (válida ou não)
-  & não diz qual padrão foi reconhecido, nem onde está o erro
-  & manter finais separados, ou mensagem por estado \\
+Autômato produto mínimo dá resposta binária
+  & o produto de 11 estados não informa qual padrão foi reconhecido nem onde está o erro
+  & executar AFDs separados (como em \texttt{identificar\_modelo}) ou emitir mensagem por estado \\
 \bottomrule
 \end{tabular}
 \caption{Limitações do validador e formas de tratá-las.}
@@ -56,7 +57,8 @@ trabalho, e podem mudar se a regra ou o uso mudarem:
         embora ele seja apenas uma convenção visual da chapa;
   \item a quinta posição do Mercosul aceita qualquer letra, pois o
         validador não sabe se a placa foi convertida;
-  \item as letras são consideradas apenas em caixa alta, sem acento.
+  \item os autômatos puros operam apenas sobre letras em caixa alta,
+        sem acento, delegando a normalização à camada de entrada.
 \end{itemize}
 
 As normas que definem as placas são resoluções do CONTRAN
@@ -77,12 +79,14 @@ com mais de seiscentos milhões de placas possíveis.
 \subsection{Evolução possível}
 
 \begin{itemize}
-  \item \textbf{Normalização da entrada:} converter minúsculas em
-        maiúsculas e remover espaços antes da validação, para
-        aceitar o que o usuário digita naturalmente.
-  \item \textbf{Classificação do padrão:} usar o autômato de 14
-        estados, com finais separados, para informar se a placa é
-        do padrão anterior ou do Mercosul.
+  \item \textbf{Normalização completa da entrada:} complementar a
+        conversão para maiúsculas e remoção de bordas já existente
+        em \texttt{identificar\_modelo} com a remoção de espaços
+        internos (como em \texttt{ABC 1234}).
+  \item \textbf{Classificação em autômato único:} utilizar a versão
+        de 14 estados do autômato produto (com estados finais
+        separados) para identificar o padrão em uma única passada,
+        sem precisar executar dois autômatos sequencialmente.
   \item \textbf{Validação durante a digitação:} como cada estado
         representa uma etapa da placa, o validador pode avisar a
         cada caractere se o que foi digitado ainda pode formar uma

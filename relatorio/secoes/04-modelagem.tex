@@ -1,4 +1,5 @@
 \section{Modelagem Matemática}
+\label{sec:modelagem}
 
 Esta seção especifica os AFDs que reconhecem os padrões de placa
 definidos na especificação da linguagem.
@@ -164,19 +165,19 @@ até J, conjunto $\LAJ = \{A, B, C, D, E, F, G, H, I, J\}$. A
 estrutura continua sendo LLLNLNN.
 
 \emph{Em palavras:} o AFD 03 funciona como o AFD 02, mas a letra da
-quinta posição só pode ser de A a J. Qualquer outra letra nessa
+quinta posição só pode ser de A a J. Qualquer outro símbolo nessa
 posição leva ao estado de erro $q_R$.
 
 \subsubsection{Definição formal}
 
 $M_3 = (Q_3, \Sigma, \delta_3, q_0, F_3)$, com $Q_3 = Q_2$ e
-$F_3 = \{q_7\}$. A função $\delta_3$ coincide com $\delta_2$, exceto
-nas transições que partem de $q_4$:
+$F_3 = \{q_7\}$. A função total $\delta_3 : Q_3 \times \Sigma \to Q_3$
+coincide com $\delta_2$, exceto nas transições que partem de $q_4$:
 \[
   \delta_3(q_4, a) =
   \begin{cases}
     q_5 & \text{se } a \in \LAJ,\\
-    q_R & \text{se } a \in \Lt \setminus \LAJ.
+    q_R & \text{se } a \in \Sigma \setminus \LAJ.
   \end{cases}
 \]
 
@@ -188,18 +189,25 @@ nas transições que partem de $q_4$:
 
 Vale $\lang{Conv} \subseteq \lang{Mercosul}$. O AFD verifica apenas a
 restrição formal da quinta posição; ele não determina a origem ou o
-histórico real de uma placa.
+histórico real de uma placa. Na implementação em Python
+(\texttt{automato\_mercosul\_convertido.py}), essa restrição é
+aplicada como uma guarda prévia sobre o quinto caractere combinada
+à execução das transições do AFD 02, reconhecendo exatamente a mesma
+linguagem $\lang{Conv}$.
 
 \subsection{Reconhecimento combinado}
 
-O programa principal executa os dois reconhecedores obrigatórios de
-forma independente: primeiro o AFD 01 e, se ele rejeitar a entrada,
-o AFD 02. A placa é aceita se pelo menos um deles a aceitar:
+O módulo identificador (\texttt{identificador\_placa.py}) executa os
+reconhecedores de forma independente e sequencial: primeiro o AFD 01 e,
+se ele rejeitar a entrada, o reconhecedor Mercosul. A placa é aceita
+no domínio geral se pertencer à união das duas linguagens:
 \[
   \lang{Validador} = \lang{PNU} \cup \lang{Mercosul}.
 \]
-A versão restrita (AFD 03) pode ser usada como verificação adicional,
-sem substituir o reconhecedor Mercosul geral.
+No código, o AFD 02 reconhece o padrão Mercosul geral ($\lang{Mercosul}$),
+enquanto o módulo identificador utiliza a verificação restrita do AFD 03
+($\lang{Conv}$) quando se deseja restringir a quinta posição às letras
+de A a J.
 
 \begin{table}[ht]
 \centering
@@ -219,5 +227,3 @@ Entrada & AFD 01 & AFD 02 & Resultado \\
 \caption{Classificação de entradas pelos dois reconhecedores.}
 \label{tab:classificacao}
 \end{table}
-
-\clearpage

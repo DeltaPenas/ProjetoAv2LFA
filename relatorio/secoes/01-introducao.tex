@@ -1,4 +1,5 @@
 \section{Contexto e Problema}
+\label{sec:introducao}
 
 Sistemas de estacionamento, pedágio, cadastro de veículos e
 seguros recebem placas digitadas por pessoas. Erros de digitação,
@@ -20,7 +21,7 @@ a quem digita.
         válida;
   \item um modelo matemático (autômato finito determinístico) que
         decide a validade de forma exata e previsível;
-  \item uma implementação em Python que segue o modelo e foi testada
+  \item uma implementação em Python que segue o modelo e foi verificada
         com casos válidos e inválidos;
   \item a demonstração de que o modelo não tem estados desnecessários.
 \end{itemize}
@@ -35,8 +36,10 @@ um veículo.
 
 \subsection{Como ler este documento}
 
-A Seção~2 define o que o validador aceita e rejeita, com exemplos.
-A Seção~3 explica a ideia da solução. As Seções~4 a
-6 trazem o modelo matemático, os diagramas e a garantia de que o
-autômato é mínimo. A Seção~7 mostra os testes, e a Seção~8
-discute limitações e evolução.
+A Seção~\ref{sec:como-funciona} explica a ideia da solução.
+A Seção~\ref{sec:especificacao} define o que o validador aceita e
+rejeita, com exemplos. As Seções~\ref{sec:modelagem} a
+\ref{sec:minimizacao} trazem o modelo matemático, os diagramas e a
+garantia de que o autômato é mínimo. A Seção~\ref{sec:testes}
+mostra os testes, e a Seção~\ref{sec:limitacoes} discute
+limitações e evolução.

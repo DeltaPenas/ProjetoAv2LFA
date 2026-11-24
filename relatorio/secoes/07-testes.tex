@@ -1,4 +1,5 @@
 \section{Resultados e Testes}
+\label{sec:testes}
 
 Esta seção mostra como se verificou que o validador faz o que a
 especificação promete.
@@ -7,8 +8,10 @@ especificação promete.
 
 A Tabela~\ref{tab:testes} reúne os casos usados. Eles cobrem os
 dois padrões, valores extremos e os erros mais comuns de
-digitação. O programa de testes automatizados executa cada caso e
-compara a resposta com a coluna ``Esperado''.
+digitação. Os casos avaliam diretamente os autômatos sobre o alfabeto
+formal $\Sigma$ (rejeitando minúsculas e espaços), enquanto a função
+\texttt{identificar\_modelo} aplica pré-normalização de caixa e
+remoção de espaços nas extremidades.
 
 \begin{table}[ht]
 \centering
@@ -36,7 +39,7 @@ Entrada & Esperado & Motivo \\
 \texttt{ABC1DD3}   & Inválida & letra no lugar de algarismo \\
 \texttt{ABC--1234} & Inválida & dois hífens \\
 \texttt{ABC\textvisiblespace 1234} & Inválida & espaço no meio \\
-\texttt{abc1234}   & Inválida & letras minúsculas \\
+\texttt{abc1234}   & Inválida & letras minúsculas (nos AFDs puros) \\
 \texttt{ÁBC1234}   & Inválida & letra com acento \\
 (vazia)            & Inválida & cadeia vazia \\
 \bottomrule

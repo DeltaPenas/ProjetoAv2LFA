@@ -1,8 +1,9 @@
-
+\clearpage
 \section{Diagrama de transição}
+\label{sec:diagramas}
 
 Esta seção apresenta a representação gráfica dos Autômatos
-Finitos Determinísticos definidos na Seção 04. Os diagramas
+Finitos Determinísticos definidos na Seção~\ref{sec:modelagem}. Os diagramas
 demonstram os estados, as transições e os estados finais de
 cada reconhecedor.
 
@@ -15,9 +16,6 @@ As transições não representadas explicitamente direcionam
 a leitura para o estado de rejeição $q_R$, que possui
 transição para si mesmo para qualquer símbolo do alfabeto.
 
-% --------------------------------------------------
-% CONFIGURAÇÃO DOS ESTADOS E TRANSIÇÕES
-% --------------------------------------------------
 
 \tikzset{
     estado/.style={
@@ -44,7 +42,7 @@ transição para si mesmo para qualquer símbolo do alfabeto.
     }
 }
 
-% --------------------------------------------------
+
 \subsection{AFD 01 -- Padrão Nacional Único (PNU)}
 
 O primeiro autômato reconhece placas compostas por três
@@ -91,7 +89,7 @@ pelo estado $q_4$, quando o hífen está presente.
         node[below] {$\Sigma$} (qr);
 
 \end{tikzpicture}
-\caption{Diagrama de transição do AFD 01 -- PNU.}
+\caption{Diagrama de transição do AFD 01 -- PNU (transições omitidas direcionam para $q_R$).}
 \label{fig:afd-pnu}
 \end{figure}
 
@@ -99,7 +97,7 @@ O estado final é $q_8$, alcançado após a leitura das
 três letras e dos quatro algarismos. A presença do hífen
 é opcional, sendo permitida somente após a terceira letra.
 
-% --------------------------------------------------
+
 \subsection{AFD 02 -- Padrão Mercosul}
 
 O segundo autômato reconhece placas no formato LLLNLNN,
@@ -137,7 +135,7 @@ não permite a utilização de hífen em nenhuma posição.
         node[below] {$\Sigma$} (qr);
 
 \end{tikzpicture}
-\caption{Diagrama de transição do AFD 02 -- Mercosul.}
+\caption{Diagrama de transição do AFD 02 -- Mercosul (transições omitidas direcionam para $q_R$).}
 \label{fig:afd-mercosul}
 \end{figure}
 
@@ -184,7 +182,7 @@ está na transição que parte de $q_4$.
         node[below] {$\Sigma$} (qr);
 
 \end{tikzpicture}
-\caption{Diagrama de transição do AFD 03 -- Mercosul convertido.}
+\caption{Diagrama de transição do AFD 03 -- Mercosul convertido (transições omitidas direcionam para $q_R$).}
 \label{fig:afd-convertido}
 \end{figure}
 

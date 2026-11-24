@@ -9,8 +9,6 @@ def identificar_modelo(placa):
     if validar_antigo(placa):
         return "Modelo antigo"
 
-    if validar_convertido(placa):
-        return "Modelo antigo convertido para Mercosul"
 
     if validar_mercosul(placa):
         return "Modelo Mercosul"

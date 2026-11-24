@@ -6,13 +6,11 @@
 \usepackage{booktabs}
 \usepackage{tikz}
 \usetikzlibrary{automata, positioning, arrows.meta}
-\usepackage{listings}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 
-
-\newcommand{\Lt}{\mathsf{L}}  
-\newcommand{\Nm}{\mathsf{N}}  
-\newcommand{\Hf}{\mathsf{H}}  
+\newcommand{\Lt}{\mathsf{L}}
+\newcommand{\Nm}{\mathsf{N}}
+\newcommand{\Hf}{\mathsf{H}}
 \newcommand{\LAJ}{\Lt_{\mathrm{AJ}}}
 \newcommand{\lang}[1]{\mathcal{L}(\mathrm{#1})}
 \newtheorem{definicao}{Definição}
@@ -27,7 +25,7 @@
 \begin{abstract}
 Este trabalho apresenta um validador de placas veiculares
 brasileiras, capaz de reconhecer o padrão anterior ao Mercosul e o padrão
-Mercosul . A solução é modelada por autômatos finitos
+Mercosul. A solução é modelada por autômatos finitos
 determinísticos, cuja definição formal, diagramas e prova de
 minimalidade são apresentados. O validador confere apenas o
 formato da placa, e não a sua existência em cadastros oficiais.
@@ -41,8 +39,7 @@ formato da placa, e não a sua existência em cadastros oficiais.
 \input{secoes/06-minimizacao}
 \input{secoes/07-testes}
 \input{secoes/08-limitacoes}
-input{secoes/09-conclusao}
-
+\input{secoes/09-conclusao}
 
 \bibliographystyle{plain}
 \bibliography{referencias}
