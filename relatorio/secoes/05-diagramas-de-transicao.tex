@@ -17,15 +17,18 @@ a leitura para o estado de rejeição $q_R$, que possui
 transição para si mesmo para qualquer símbolo do alfabeto.
 
 
+
 \tikzset{
     estado/.style={
         state,
-        minimum size=9mm,
-        font=\small
+        minimum size=7.5mm,
+        inner sep=1pt,
+        font=\footnotesize
     },
     inicial/.style={
         estado,
-        initial
+        initial,
+        initial text={}
     },
     final/.style={
         estado,
@@ -38,7 +41,8 @@ transição para si mesmo para qualquer símbolo do alfabeto.
     transicao/.style={
         ->,
         >=Stealth,
-        semithick
+        semithick,
+        font=\footnotesize
     }
 }
 
@@ -56,21 +60,22 @@ pelo estado $q_4$, quando o hífen está presente.
 
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}[node distance=1.25cm]
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[node distance=0.75cm]
 
     \node[inicial] (q0) {$q_0$};
     \node[estado, right=of q0] (q1) {$q_1$};
     \node[estado, right=of q1] (q2) {$q_2$};
     \node[estado, right=of q2] (q3) {$q_3$};
 
-    \node[estado, below=1.2cm of q3] (q4) {$q_4$};
+    \node[estado, below=0.95cm of q3] (q4) {$q_4$};
 
-    \node[estado, right=1.7cm of q3] (q5) {$q_5$};
+    \node[estado, right=1.1cm of q3] (q5) {$q_5$};
     \node[estado, right=of q5] (q6) {$q_6$};
     \node[estado, right=of q6] (q7) {$q_7$};
     \node[final, right=of q7] (q8) {$q_8$};
 
-    \node[rejeicao, below=2cm of q5] (qr) {$q_R$};
+    \node[rejeicao, below=1.55cm of q5] (qr) {$q_R$};
 
     \path[transicao]
         (q0) edge node[above] {$\Lt$} (q1)
@@ -88,7 +93,8 @@ pelo estado $q_4$, quando o hífen está presente.
         (qr) edge[loop below]
         node[below] {$\Sigma$} (qr);
 
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{Diagrama de transição do AFD 01 -- PNU (transições omitidas direcionam para $q_R$).}
 \label{fig:afd-pnu}
 \end{figure}
@@ -109,7 +115,8 @@ não permite a utilização de hífen em nenhuma posição.
 
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}[node distance=1.35cm]
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[node distance=0.8cm]
 
     \node[inicial] (q0) {$q_0$};
     \node[estado, right=of q0] (q1) {$q_1$};
@@ -120,7 +127,7 @@ não permite a utilização de hífen em nenhuma posição.
     \node[estado, right=of q5] (q6) {$q_6$};
     \node[final, right=of q6] (q7) {$q_7$};
 
-    \node[rejeicao, below=1.8cm of q4] (qr) {$q_R$};
+    \node[rejeicao, below=1.4cm of q4] (qr) {$q_R$};
 
     \path[transicao]
         (q0) edge node[above] {$\Lt$} (q1)
@@ -134,7 +141,8 @@ não permite a utilização de hífen em nenhuma posição.
         (qr) edge[loop below]
         node[below] {$\Sigma$} (qr);
 
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{Diagrama de transição do AFD 02 -- Mercosul (transições omitidas direcionam para $q_R$).}
 \label{fig:afd-mercosul}
 \end{figure}
@@ -143,7 +151,6 @@ O estado final $q_7$ indica que toda a sequência exigida
 foi reconhecida corretamente. Qualquer caractere fora
 da sequência esperada conduz ao estado de rejeição $q_R$.
 
-% --------------------------------------------------
 \subsection{AFD 03 -- Mercosul convertido}
 
 O terceiro autômato é uma extensão do reconhecedor
@@ -156,7 +163,8 @@ está na transição que parte de $q_4$.
 
 \begin{figure}[ht]
 \centering
-\begin{tikzpicture}[node distance=1.35cm]
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[node distance=0.8cm]
 
     \node[inicial] (q0) {$q_0$};
     \node[estado, right=of q0] (q1) {$q_1$};
@@ -167,7 +175,7 @@ está na transição que parte de $q_4$.
     \node[estado, right=of q5] (q6) {$q_6$};
     \node[final, right=of q6] (q7) {$q_7$};
 
-    \node[rejeicao, below=1.8cm of q4] (qr) {$q_R$};
+    \node[rejeicao, below=1.4cm of q4] (qr) {$q_R$};
 
     \path[transicao]
         (q0) edge node[above] {$\Lt$} (q1)
@@ -181,7 +189,8 @@ está na transição que parte de $q_4$.
         (qr) edge[loop below]
         node[below] {$\Sigma$} (qr);
 
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{Diagrama de transição do AFD 03 -- Mercosul convertido (transições omitidas direcionam para $q_R$).}
 \label{fig:afd-convertido}
 \end{figure}
@@ -190,7 +199,6 @@ Nesse reconhecedor, caso seja lida uma letra fora do
 conjunto $\LAJ$ na quinta posição, a entrada será
 direcionada ao estado de rejeição $q_R$.
 
-% --------------------------------------------------
 \subsection{Considerações sobre os diagramas}
 
 Os três diagramas representam visualmente as funções
