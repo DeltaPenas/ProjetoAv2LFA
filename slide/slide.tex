@@ -1,156 +1,404 @@
+
 \documentclass{beamer}
---tema do slide--
+
+% Tema do slide
 \usetheme{Madrid}
+
+% Pacotes
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[brazilian]{babel}
-\usepackage{amsmath, amssymb}
+\usepackage{amsmath, amssymb, amsthm}
 \usepackage{tikz}
 \usetikzlibrary{automata, positioning, arrows.meta}
 \usepackage{booktabs}
 
+% Comandos personalizados
 \newcommand{\Lt}{\mathsf{L}}
 \newcommand{\Nm}{\mathsf{N}}
 \newcommand{\Hf}{\mathsf{H}}
 \newcommand{\LAJ}{\Lt_{\mathrm{AJ}}}
 \newcommand{\lang}[1]{\mathcal{L}(\mathrm{#1})}
 
+% Informações da apresentação
+
 \title{Validador de Placas Veiculares Brasileiras}
 \subtitle{Via Autômato Finito Determinístico}
-\author[]{Nome Daniel Paulino \and Nome Wlademir Pontes \and Nome João Gabriel \and Nome Celso Vinícius}
+\author{
+Celso Vinicius Souza Silva \and
+Daniel Paulino da Silva Neto \and
+João Gabriel da Silva Nemezio \and
+Wlademir Pontes Xavier
+}
 \date{\today}
 
 \begin{document}
 
+% CAPA
+
 \begin{frame}
-\titlepage
+    \titlepage
 \end{frame}
+
+% SUMÁRIO
 
 \begin{frame}{Sumário}
-\tableofcontents
+    \tableofcontents
 \end{frame}
 
-\section{Objetivo}
+% INTRODUÇÃO
 
-\begin{frame}{Objetivo}
-\begin{itemize}
-\item Validar placas de veículos brasileiras de forma formal
-\item Modelar a linguagem das placas como linguagem regular
-\item Construir um Autômato Finito Determinístico que reconhece $\lang{Placas}$
-\item Implementar o validador em Python
-\end{itemize}
+\section{Introdução}
+
+\begin{frame}{Introdução}
+    \begin{itemize}
+        \item O trabalho apresenta um validador de placas veiculares brasileiras.
+        
+        \item O sistema reconhece dois padrões:
+        \begin{itemize}
+            \item Padrão antigo;
+            \item Padrão Mercosul.
+        \end{itemize}
+        
+        \item A solução utiliza Autômatos Finitos Determinísticos (AFD).
+        
+        \item A validação verifica somente o formato da placa, não sua existência em cadastros oficiais.
+    \end{itemize}
 \end{frame}
 
-\section{Especificação}
+\begin{frame}{Objetivo do Projeto}
+    \begin{block}{Objetivo principal}
+        Desenvolver um validador capaz de identificar se uma placa
+        veicular brasileira corresponde ao padrão antigo ou ao padrão
+        Mercosul, utilizando conceitos da Teoria da Computação.
+    \end{block}
 
-\begin{frame}{Especificação - Alfabeto}
-\begin{itemize}
-\item $\Lt$ = classe das letras: $\{A, B, \dots, Z\}$
-\item $\Nm$ = classe dos algarismos: $\{0, 1, \dots, 9\}$
-\item $\Hf$ = classe do hífen: $\{-\}$
-\item Alfabeto total: $\Sigma = \Lt \cup \Nm \cup \Hf$
-\end{itemize}
+    \vspace{0.4cm}
+
+    \begin{itemize}
+        \item Representar os formatos por linguagens formais.
+        \item Construir autômatos para reconhecer os padrões.
+        \item Demonstrar formalmente o funcionamento da solução.
+        \item Analisar a minimalidade dos autômatos.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Especificação - Linguagem}
-\begin{itemize}
-\item Padrão antigo: $\Lt\Lt\Lt \Hf \Nm\Nm\Nm\Nm$
-\item Exemplo: \texttt{ABC-1234}
-\item Padrão Mercosul: $\Lt\Lt\Lt \Nm \LAJ \Nm\Nm$
-\item Exemplo: \texttt{ABC1D23}
-\item $\LAJ$ = letra restrita da 5ª posição no Mercosul
-\end{itemize}
+% FUNCIONAMENTO
+
+\section{Como Funciona}
+
+\begin{frame}{Funcionamento do Validador}
+    O funcionamento consiste em receber uma placa e verificar
+    se seus caracteres seguem algum dos padrões reconhecidos.
+
+    \vspace{0.4cm}
+
+    \begin{center}
+    \begin{tikzpicture}[
+        node distance=1.5cm,
+        bloco/.style={
+            rectangle,
+            rounded corners,
+            draw,
+            align=center,
+            minimum width=2.5cm,
+            minimum height=0.9cm
+        },
+        >=Stealth
+    ]
+
+    \node[bloco] (entrada) {Entrada da placa};
+    \node[bloco, right=of entrada] (afd) {Validação pelos AFDs};
+    \node[bloco, right=of afd] (resultado) {Resultado};
+
+    \draw[->] (entrada) -- (afd);
+    \draw[->] (afd) -- (resultado);
+
+    \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.5cm}
+
+    \begin{itemize}
+        \item Se corresponder ao padrão antigo, será reconhecida.
+        \item Se corresponder ao padrão Mercosul, será reconhecida.
+        \item Caso contrário, será considerada inválida.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Definição Formal}
-\begin{block}{Linguagem das Placas}
-\[
-\lang{Placas} = \lang{Antigo} \cup \lang{Mercosul}
-\]
-onde cada placa é uma palavra sobre $\Sigma$ que segue um dos dois padrões.
-\end{block}
+\begin{frame}{Limitações do Validador}
+    \begin{alertblock}{Importante}
+        O validador reconhece apenas a estrutura e o formato
+        das placas.
+    \end{alertblock}
+
+    \begin{itemize}
+        \item Não consulta bancos de dados oficiais.
+        \item Não verifica se a placa está registrada.
+        \item Não confirma a situação legal do veículo.
+        \item Apenas identifica se a sequência de caracteres
+        corresponde a um dos padrões definidos.
+    \end{itemize}
 \end{frame}
 
-\section{Modelagem}
+% ESPECIFICAÇÃO
 
-\begin{frame}{Modelagem - AFD}
-\begin{itemize}
-\item Autômato Finito Determinístico: $M = (Q, \Sigma, \delta, q_0, F)$
-\item $Q$ = conjunto de estados
-\item $q_0$ = estado inicial
-\item $F$ = estados finais (placa aceita)
-\item $\delta$ = função de transição
-\end{itemize}
+\section{Especificação Formal}
+
+\begin{frame}{Alfabeto}
+    Para representar as placas, foram definidas as seguintes
+    classes de símbolos:
+
+    \vspace{0.3cm}
+
+    \begin{itemize}
+        \item $\Lt$: conjunto de letras de A até Z.
+        \item $\Nm$: conjunto de algarismos de 0 até 9.
+        \item $\Hf$: símbolo correspondente ao hífen.
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    \begin{block}{Alfabeto}
+        \[
+            \Sigma = \Lt \cup \Nm \cup \Hf
+        \]
+    \end{block}
 \end{frame}
 
-\begin{frame}{Diagrama do Autômato - Padrão Antigo}
-\begin{center}
-\begin{tikzpicture}[shorten >=1pt, node distance=1.3cm, on grid, auto, ->, >=Stealth]
-\node[state, initial] (q0) {$q_0$};
-\node[state, right=of q0] (q1) {$q_1$};
-\node[state, right=of q1] (q2) {$q_2$};
-\node[state, right=of q2] (q3) {$q_3$};
-\node[state, right=of q3] (q4) {$q_4$};
-\node[state, right=of q4] (q5) {$q_5$};
-\node[state, right=of q5, accepting] (q6) {$q_6$};
+\begin{frame}{Padrão Antigo}
+    O padrão antigo de placas brasileiras possui:
 
-\path (q0) edge node {$\Lt$} (q1)
-      (q1) edge node {$\Lt$} (q2)
-      (q2) edge node {$\Lt$} (q3)
-      (q3) edge node {$\Hf$} (q4)
-      (q4) edge node {$\Nm$} (q5)
-      (q5) edge node {$\Nm$} (q6);
-\end{tikzpicture}
-\end{center}
-\vspace{0.3cm}
-\small{Exemplo simplificado. No trabalho completo, cada $\Nm$ e $\Lt$ se expande para os 4 dígitos / 3 letras.}
+    \begin{itemize}
+        \item Três letras;
+        \item Um hífen;
+        \item Quatro números.
+    \end{itemize}
+
+    \begin{block}{Representação formal}
+        \[
+            \lang{Antigo} = \Lt^3 \Hf \Nm^4
+        \]
+    \end{block}
+
+    \begin{exampleblock}{Exemplo}
+        \centering
+        \Large \texttt{ABC-1234}
+    \end{exampleblock}
 \end{frame}
 
-\begin{frame}{Tabela de Transições}
-\begin{center}
-\begin{tabular}{c|c|c|c}
-\toprule
-Estado & $\Lt$ & $\Nm$ & $\Hf$ \\
-\midrule
-$q_0$ & $q_1$ & - & - \\
-$q_1$ & $q_2$ & - & - \\
-$q_2$ & $q_3$ & - & - \\
-$q_3$ & - & - & $q_4$ \\
-$q_4$ & - & $q_5$ & - \\
-\bottomrule
-\end{tabular}
-\end{center}
+\begin{frame}{Padrão Mercosul}
+    O padrão Mercosul possui sete caracteres:
+
+    \begin{itemize}
+        \item Três letras iniciais;
+        \item Um número na quarta posição;
+        \item Uma letra na quinta posição;
+        \item Dois números nas posições finais.
+    \end{itemize}
+
+    \begin{block}{Representação formal}
+        \[
+            \lang{Mercosul} =
+            \Lt^3 \Nm \LAJ \Nm^2
+        \]
+    \end{block}
+
+    \begin{exampleblock}{Exemplo}
+        \centering
+        \Large \texttt{ABC1D23}
+    \end{exampleblock}
 \end{frame}
 
-\section{Implementação e Testes}
+\begin{frame}{Linguagem das Placas}
+    A linguagem completa do projeto é formada pela união
+    dos dois padrões.
 
-\begin{frame}{Implementação}
-\begin{itemize}
-\item \texttt{automato\_base.py} - estrutura genérica do AFD
-\item \texttt{automato\_mercosul.py} - regras do Mercosul
-\item \texttt{automato\_antigo.py} - regras do padrão antigo
-\item \texttt{validador.py} - une os dois autômatos
-\item \texttt{main.py} - interface de execução
-\end{itemize}
+    \begin{block}{Definição formal}
+        \[
+            \lang{Placas} =
+            \lang{Antigo} \cup \lang{Mercosul}
+        \]
+    \end{block}
+
+    \begin{itemize}
+        \item Uma placa será aceita se pertencer a um dos dois padrões.
+        \item Caso não pertença a nenhum deles, será rejeitada.
+    \end{itemize}
 \end{frame}
 
-\begin{frame}{Testes}
-\begin{itemize}
-\item \texttt{tests/test\_placas.py}
-\item Casos válidos: \texttt{ABC-1234}, \texttt{ABC1D23}
-\item Casos inválidos: \texttt{ABC-12}, \texttt{ABCD-123}, \texttt{ABC-123A}
-\item Testa aceitação e rejeição do AFD
-\end{itemize}
+% MODELAGEM
+
+\section{Modelagem dos Autômatos}
+
+\begin{frame}{Autômato Finito Determinístico}
+    Um AFD é definido formalmente pela tupla:
+
+    \[
+        M = (Q, \Sigma, \delta, q_0, F)
+    \]
+
+    Onde:
+
+    \begin{itemize}
+        \item $Q$: conjunto finito de estados.
+        \item $\Sigma$: alfabeto de entrada.
+        \item $\delta$: função de transição.
+        \item $q_0$: estado inicial.
+        \item $F$: conjunto de estados finais.
+    \end{itemize}
+
+    \vspace{0.3cm}
+
+    O autômato percorre os estados de acordo com os
+    caracteres recebidos e aceita a entrada quando
+    termina em um estado final.
 \end{frame}
+
+\begin{frame}{Autômato do Padrão Antigo}
+    \begin{center}
+    \begin{tikzpicture}[
+        shorten >=1pt,
+        node distance=1.15cm,
+        on grid,
+        auto,
+        ->,
+        >=Stealth,
+        every state/.style={minimum size=0.65cm}
+    ]
+
+    \node[state, initial] (q0) {$q_0$};
+    \node[state, right=of q0] (q1) {$q_1$};
+    \node[state, right=of q1] (q2) {$q_2$};
+    \node[state, right=of q2] (q3) {$q_3$};
+    \node[state, right=of q3] (q4) {$q_4$};
+    \node[state, right=of q4] (q5) {$q_5$};
+    \node[state, right=of q5] (q6) {$q_6$};
+    \node[state, right=of q6] (q7) {$q_7$};
+    \node[state, right=of q7, accepting] (q8) {$q_8$};
+
+    \path
+    (q0) edge node {$\Lt$} (q1)
+    (q1) edge node {$\Lt$} (q2)
+    (q2) edge node {$\Lt$} (q3)
+    (q3) edge node {$\Hf$} (q4)
+    (q4) edge node {$\Nm$} (q5)
+    (q5) edge node {$\Nm$} (q6)
+    (q6) edge node {$\Nm$} (q7)
+    (q7) edge node {$\Nm$} (q8);
+
+    \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.3cm}
+
+    \small
+    O estado final é alcançado após a leitura das três letras,
+    do hífen e dos quatro algarismos.
+\end{frame}
+
+\begin{frame}{Autômato do Padrão Mercosul}
+    \begin{center}
+    \begin{tikzpicture}[
+        shorten >=1pt,
+        node distance=1.15cm,
+        on grid,
+        auto,
+        ->,
+        >=Stealth,
+        every state/.style={minimum size=0.65cm}
+    ]
+
+    \node[state, initial] (q0) {$q_0$};
+    \node[state, right=of q0] (q1) {$q_1$};
+    \node[state, right=of q1] (q2) {$q_2$};
+    \node[state, right=of q2] (q3) {$q_3$};
+    \node[state, right=of q3] (q4) {$q_4$};
+    \node[state, right=of q4] (q5) {$q_5$};
+    \node[state, right=of q5] (q6) {$q_6$};
+    \node[state, right=of q6, accepting] (q7) {$q_7$};
+
+    \path
+    (q0) edge node {$\Lt$} (q1)
+    (q1) edge node {$\Lt$} (q2)
+    (q2) edge node {$\Lt$} (q3)
+    (q3) edge node {$\Nm$} (q4)
+    (q4) edge node {$\LAJ$} (q5)
+    (q5) edge node {$\Nm$} (q6)
+    (q6) edge node {$\Nm$} (q7);
+
+    \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.3cm}
+
+    \small
+    O autômato aceita a entrada quando os sete caracteres
+    seguem a sequência definida pelo padrão Mercosul.
+\end{frame}
+
+% MINIMALIDADE
+
+\section{Minimalidade}
+
+\begin{frame}{Prova de Minimalidade}
+    A minimalidade busca demonstrar que o autômato utiliza
+    a menor quantidade possível de estados para reconhecer
+    determinada linguagem.
+
+    \vspace{0.3cm}
+
+    \begin{itemize}
+        \item Cada posição da placa exige uma etapa de leitura.
+        \item Estados representam diferentes quantidades e tipos
+        de caracteres já reconhecidos.
+        \item Estados que representam situações distintas não
+        podem ser simplesmente unidos.
+    \end{itemize}
+
+    \begin{block}{Objetivo}
+        Demonstrar que não existe um AFD equivalente com
+        uma quantidade menor de estados.
+    \end{block}
+\end{frame}
+
+% CONCLUSÃO
+
+\section{Conclusão}
 
 \begin{frame}{Conclusão}
-O AFD reconhece exatamente $\lang{Placas}$, provando que a validação pode ser feita de forma formal, eficiente e sem expressões regulares ad-hoc.
+    \begin{itemize}
+        \item O projeto utiliza conceitos de linguagens formais
+        e autômatos finitos determinísticos.
+        
+        \item Foram considerados os padrões antigo e Mercosul.
+        
+        \item A modelagem permite reconhecer formalmente
+        sequências válidas de caracteres.
+        
+        \item O estudo também aborda a definição formal
+        e a minimalidade dos autômatos.
+    \end{itemize}
+
+    \vspace{0.4cm}
+
+    \begin{block}{Resultado}
+        A utilização de AFD permite implementar uma validação
+        estruturada, determinística e eficiente dos formatos
+        de placas veiculares brasileiras.
+    \end{block}
 \end{frame}
 
+% ENCERRAMENTO
+
 \begin{frame}{Obrigado!}
-\begin{center}
-\Large Perguntas?
-\end{center}
+    \begin{center}
+        \Huge Obrigado pela atenção!
+
+        \vspace{0.5cm}
+
+        \Large Perguntas?
+    \end{center}
 \end{frame}
 
 \end{document}
